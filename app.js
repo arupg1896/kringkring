@@ -1,8 +1,17 @@
+require('dotenv').config();
 const express = require('express');
-
 const app = express();
+const mongoose = require('mongoose')
 
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
+const db = mongoose.connection;
+db.on('error', (error) => console.error(error));
+db.once('open', () => console.log('Connected to Database'));
 
+app.use(express.json());
+
+const userRouter = require('./routes/user');
+app.use('/user', userRouter);
 
 // fat arrow function or anonymous function or lambda function, call back function
 // asynscronous, syncronous
@@ -10,39 +19,3 @@ app.listen(5000, () => {
     console.log('Server started  on port 5000');
 })
 
-app.get('/', (req, res)=>{
-    res.send('Home Page');
-})
-
-
-
-app.get('/contact', (req, res)=>{
-    res.send('Contact');
-})
-
-
-// app.use('/about', (req, res) => {
-    //     console.log('This is about midleware');
-    // })
-    
-    
-    // app.get('/about', (req, res)=>{
-        //     res.send('about');
-        // })
-        
-        // app.use('/blog', (req, res) => {
-            //     console.log('This is blog midleware');
-            // })
-            
-            
-            // app.get('/blog', (req, res)=>{
-                //     res.send('blog');
-                // })
-                
-app.use('/', (req, res)=> {
-    console.log('This is home midleware');
-})
-
-// app.use('/contact', (req, res) => {
-//     console.log('This is contact midleware');
-// })
